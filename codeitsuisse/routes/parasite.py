@@ -86,8 +86,6 @@ def parasite(info):
                     infected_nearby = any([prev_grid_status_p3[n[0]][n[1]] == 3 for n in nn])
                     if infected_nearby:
                         current_state_p3[i][j] = 3
-                        if (i,j) in indiv_coord:
-                            results['p1'][str(i)+","+str(j)] = time
         if prev_grid_status_p3 == current_state_p3:
             break
         prev_grid_status_p3 = [x[:] for x in current_state_p3]
