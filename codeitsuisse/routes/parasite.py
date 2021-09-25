@@ -21,9 +21,6 @@ def evaluateParasite():
     logging.info("My result :{}".format(output))
     return json.dumps(output)
 
-
-
-
 def parasite(info):
     results = {
         "room": info['room'],
@@ -32,6 +29,7 @@ def parasite(info):
         "p3": 0,
         "p4": 0
     }
+    # Part 1
     grid_status_p1 = [x[:] for x in info['grid']]
     r,c = len(grid_status_p1), len(grid_status_p1[0])
     indiv_coord = []
@@ -55,7 +53,6 @@ def parasite(info):
     current_state_p1 = [x[:] for x in grid_status_p1]
     prev_grid_status_p1 = [x[:] for x in grid_status_p1]
     while True:
-        print(current_state_p1)
         time +=1 
         for i in range(r):
             for j in range(c):
@@ -68,12 +65,37 @@ def parasite(info):
                             results['p1'][str(i)+","+str(j)] = time
         if prev_grid_status_p1 == current_state_p1:
             break
-        prev_grid_status_p1 = [x[:] for x in current_state_p1]    
+        prev_grid_status_p1 = [x[:] for x in current_state_p1]
+    # Part 2
     healthy_remains = any([prev_grid_status_p1[i][j] == 1 for j in range(c) for i in range(r)])
     if healthy_remains:
         results['p2'] = -1
     else:
-        results['p2'] = time - 1  
+        results['p2'] = time - 1   
+    # Part 3
+    time = 0
+    current_state_p3 = [x[:] for x in grid_status_p1]
+    prev_grid_status_p3 = [x[:] for x in grid_status_p1]
+    while True:
+        
+        time +=1 
+        for i in range(r):
+            for j in range(c):
+                if prev_grid_status_p3[i][j] == 1:
+                    nn = find_neighbors_mutated((i,j),grid_status_p1) 
+                    infected_nearby = any([prev_grid_status_p3[n[0]][n[1]] == 3 for n in nn])
+                    if infected_nearby:
+                        current_state_p3[i][j] = 3
+                        if (i,j) in indiv_coord:
+                            results['p1'][str(i)+","+str(j)] = time
+        if prev_grid_status_p3 == current_state_p3:
+            break
+        prev_grid_status_p3 = [x[:] for x in current_state_p3]
+    healthy_remains_p3 = any([prev_grid_status_p3[i][j] == 1 for j in range(c) for i in range(r)])
+    if healthy_remains_p3:
+        results['p3'] = -1
+    else:
+        results['p3'] = time - 1   
     return results
 
 def find_neighbors(coords,grid):
@@ -85,3 +107,11 @@ def find_neighbors(coords,grid):
             neighbors.append((coords[0]+d[0],coords[1]+d[1]))
     return neighbors
 
+def find_neighbors_mutated(coords,grid):
+    r,c = len(grid), len(grid[0])
+    directions = [[0,1], [1,0], [-1,0], [0,-1], [1,1], [-1,-1],[1,-1],[-1,1]]
+    neighbors = []
+    for d in directions:
+        if  (0<=coords[0]+d[0]) and (coords[0]+d[0]<r) and (0<=coords[1]+d[1]) and (coords[1]+d[1]<c):
+            neighbors.append((coords[0]+d[0],coords[1]+d[1]))
+    return neighbors
