@@ -68,7 +68,12 @@ def parasite(info):
                             results['p1'][str(i)+","+str(j)] = time
         if prev_grid_status_p1 == current_state_p1:
             break
-        prev_grid_status_p1 = [x[:] for x in current_state_p1]     
+        prev_grid_status_p1 = [x[:] for x in current_state_p1]    
+    healthy_remains = any([prev_grid_status_p1[i][j] == 1 for j in range(c) for i in range(r)])
+    if healthy_remains:
+        results['p2'] = -1
+    else:
+        results['p2'] = time  
     return results
 
 def find_neighbors(coords,grid):
