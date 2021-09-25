@@ -73,7 +73,7 @@ def parasite(info):
     if healthy_remains:
         results['p2'] = -1
     else:
-        results['p2'] = time  
+        results['p2'] = time - 1  
     return results
 
 def find_neighbors(coords,grid):
